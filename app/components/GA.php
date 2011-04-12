@@ -15,10 +15,15 @@ class GA
 
 	
 	
-	public static function generateInitPopulation(){		
+	public static function generateInitPopulation(){
+
+		$generation = 
+		
 		$function = mt_rand(1, COUNT_OF_FUNCTIONS);
 		$coordinates = self::generateCoordinates($function);
 		$colors = self::generateColor();
+		if(self::width != -1 or self::height != -1)
+			$generation = array_merge(self::width, self::height, );
 	}
 	
 	
