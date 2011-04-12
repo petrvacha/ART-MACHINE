@@ -34,14 +34,15 @@ class Image {
 	private $b = 0;
 	
 	//x,y,r,g,b,func,argsCount,...
-	public function __construct() {
-		$this->numargs = func_num_args();
-		$this->argList = func_get_args();
+	public function __construct(array $population) {
+		$this->numargs = count($population);
+		$this->argList = $population;
 		$this->parseInput();
 	}
 	
 	
 	private function parseInput() {
+		
 		$this->width = $this->argList[0];
 		$this->height = $this->argList[1];
 		$this->r = $this->argList[2];
@@ -67,7 +68,8 @@ class Image {
 		$background = imagecolorallocate($this->img, $this->r, $this->g, $this->b); // set background
 		imagefilledrectangle($this->img,0,0,$this->width,$this->height,$background);
 		
-		//imageantialias($this->img, true);
+		if (function_exists('imageantialias'))
+			imageantialias($this->img, true);
 	}
 
 	private function applyFunction($function, $argArray) {

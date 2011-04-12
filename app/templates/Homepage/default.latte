@@ -1,4 +1,14 @@
 {block content}
-Ahoj
-<img src="new.png">
+
+<h1>evovin generátor</h1>
+
+<img style="float:left; margin-right:10px" src="new.png"> <img src="new2.png">
+
+<script>
+      $(document.body).ready(function () {
+        $("img:hidden:eq(0)").fadeIn(1200);
+        $("img:hidden:eq(1)").fadeIn(1200);
+      });
+</script>
+    
 {/block}
