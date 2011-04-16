@@ -1,0 +1,11 @@
+temp/
+data/
+grafika/
+log/
+files/
+.project
+.buildpath
+.settings/
+
+new.png
+new2.png
