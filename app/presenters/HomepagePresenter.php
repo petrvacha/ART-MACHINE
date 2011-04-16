@@ -18,10 +18,10 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$ga = new GA;
-		$ga->setDimensions(300, 300);
+		$ga = new GA(500, 500);
 		$ga->generateInitGeneration();
-		//dump(GA::$generation[0]);
+		//echo "<pre>";
+		//print_r($ga->generation);die;
 		//dump(array(300,300, 250,30,100, 1,7, 120,10,200,200, 10,20,0));die;
 					//     x,  y,   r, g,  b, f,a, x1, y1, x2, y2,   r,g,b
 		//$img = new Image(array(300,300, 250,30,100, 1,7, 120,10,200,200, 10,20,0));
