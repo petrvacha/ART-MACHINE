@@ -41,7 +41,6 @@ class GA
 				$this->generation[$i]['elements'][$y]['coordinates'] = $coordinates;
 				$this->generation[$i]['elements'][$y]['color'] = $elementColors;
 			}
-
 			
 		}
 		

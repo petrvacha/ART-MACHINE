@@ -1,9 +1,8 @@
 temp/
 log/
-files/
 .project
 .buildpath
 .settings/
 
-new.png
-new2.png
+www/new.png
+www/new2.png
