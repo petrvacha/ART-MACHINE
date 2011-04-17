@@ -33,16 +33,17 @@ class HomepagePresenter extends BasePresenter
 			$ga->setCountOfPopulations($this->populations);
 			$ga->generateInitGeneration();
 			$session->generation = $ga->generation;
+			$session->gaObject = serialize($ga); 
 			$session->selected = array();
 		}
 		else {
-			$session->selected[$round] = $selected;
+			$session->selected[$round-1] = $selected;
 			$session->round = $round;
 		}
 		
 		if($session->round >= $this->populations/$this->picturesOnPage) {
 			$session->round = 0;
-			$this->redirect('default');
+			$this->redirect('Homepage:nextgeneration');
 		}
 
 		$imgArray = array();
@@ -52,6 +53,13 @@ class HomepagePresenter extends BasePresenter
 		}
 		$this->template->round = $session->round+1;
 		$this->template->imgArray = $imgArray;
+	}
+	
+	public function actionNextgeneration(){
+		$session = NEnvironment::getSession("ga");
+		//DUMP($session->gaObject);die;
+		$ga = unserialize($session->gaObject);
+		$ga->createNewPopulation($session->selected);
 		
 		
 	}

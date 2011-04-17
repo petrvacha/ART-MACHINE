@@ -78,18 +78,9 @@ class GA
 		return array('r' => mt_rand(0,255),'g' => mt_rand(0,255),'b' => mt_rand(0,255));
 	}
 	
-	
-	
-	public function rankPopulation() {
-		
-	}
-	
-	private function fitness() {
-		
-	}
 
-	private function createNewPopulation() {
-		
+	public function createNewPopulation($selected) {
+		DUMP($selected);die;
 	}
 	
 	private function mutationColor($r, $g, $b) {
