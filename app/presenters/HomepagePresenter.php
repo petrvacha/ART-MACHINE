@@ -14,7 +14,6 @@
  * @author     Petr Vácha
  */
 
-use Nette\Environment;
 
 class HomepagePresenter extends BasePresenter
 {
