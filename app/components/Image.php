@@ -22,7 +22,8 @@
  *  imagefilltoborder ( resource $image , int $x , int $y , int $border , int $color ) 
  * 
  */
-class Image {
+class Image
+{
 	
 	private $numargs = 0;
 	private $argList = array();

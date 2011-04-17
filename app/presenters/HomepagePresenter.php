@@ -13,24 +13,48 @@
  *
  * @author     Petr Vácha
  */
+
+use Nette\Environment;
+
 class HomepagePresenter extends BasePresenter
 {
 
-	public function renderDefault()
-	{
-		$ga = new GA(500, 500);
-		$ga->generateInitGeneration();
-		//echo "<pre>";
-		//print_r($ga->generation);die;
-		//dump(array(300,300, 250,30,100, 1,7, 120,10,200,200, 10,20,0));die;
-					//     x,  y,   r, g,  b, f,a, x1, y1, x2, y2,   r,g,b
-		//$img = new Image(array(300,300, 250,30,100, 1,7, 120,10,200,200, 10,20,0));
-		$img = new Image($ga->generation[0]);
-		$img2 = new Image($ga->generation[1]);
-		$img->saveToFile("new.png");
-		$img2->saveToFile("new2.png");
-		$this->template->img = "new.png";
-		$this->template->img2 = "new2.png";
+	private $picturesOnPage = 2;
+	private $populations = 20;
+	
+	public function renderDefault($round, $selected)
+	{   
+		
+		$session = NEnvironment::getSession("ga");
+		
+		
+		if(!isset($session->generation) || !isset($round) || !isset($selected)) {
+			$session->round = 0;
+			$ga = new GA(500, 500);
+			$ga->setCountOfPopulations($this->populations);
+			$ga->generateInitGeneration();
+			$session->generation = $ga->generation;
+			$session->selected = array();
+		}
+		else {
+			$session->selected[$round] = $selected;
+			$session->round = $round;
+		}
+		
+		if($session->round >= $this->populations/$this->picturesOnPage) {
+			$session->round = 0;
+			$this->redirect('default');
+		}
+
+		$imgArray = array();
+		for($i=0; $i<$this->picturesOnPage; $i++) {
+			$imgArray[] = new Image($session->generation[$round * $this->picturesOnPage+$i]);			
+			$imgArray[$i]->saveToFile($i.".png");
+		}
+		$this->template->round = $session->round+1;
+		$this->template->imgArray = $imgArray;
+		
+		
 	}
 
 }

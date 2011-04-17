@@ -2,16 +2,16 @@
 
 	define('COUNT_OF_FUNCTIONS', 5);
 	
-class GA 
+class GA
 {
 	
 	private $functions = array(1);
 	private $width = 400;
 	private $height = 400;
-	private $crossoverPropability = 2; // 2 %
-	private $mutationPropability = 3;  // 3 %
-	private $filterPropability = 5;    // 5 %
-	private $countOfPopulations = 2;
+	private $crossoverPropability = 2; // %
+	private $mutationPropability = 3;  // %
+	private $filterPropability = 1;    // %
+	private $countOfPopulations = 10;
 	private $maxElements = 50;
 	public $generation = array();
 
@@ -30,7 +30,7 @@ class GA
 			$this->generation[$i]['height'] = $this->height;
 			$this->generation[$i]['bgcolor'] = $bgcolors;
 			$this->generation[$i]['elements'] = array();
-			$this->generation[$i]['filter'] = mt_rand(1,50);			
+			$this->generation[$i]['filter'] = mt_rand(6*$this->filterPropability, 600);			
 			
 			for($y=0; $y<mt_rand(0,$this->maxElements); $y++) {
 				$element = mt_rand(1, COUNT_OF_FUNCTIONS);
@@ -133,13 +133,15 @@ class GA
 	}
 	
 	public function setCrossoverProbability($crossover) {
-		$this->crossover = $crossover;
+		$this->crossoverPropability = $crossover;
 	}
 	
 	public function setMutationPropability($mutation) {
-		$this->mutation = $mutation;
-		
+		$this->mutationPropability = $mutation;
 	}
 	
+	public function setFilterPropability($filter) {
+		$this->filterPropability = $filter;
+	}
 	
 }
