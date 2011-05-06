@@ -19,7 +19,7 @@ class HomepagePresenter extends BasePresenter
 {
 
 	private $picturesOnPage = 2;
-	private $populations = 20;
+	private $populations = 10;
 	
 	public function renderDefault($round, $selected)
 	{   
@@ -35,19 +35,22 @@ class HomepagePresenter extends BasePresenter
 			$session->generation = $ga->generation;
 			$session->gaObject = serialize($ga); 
 			$session->selected = array();
+			
 		}
 		else {
 			$session->selected[$round-1] = $selected;
-			$session->round = $round;
+			$session->round = (int) $round;
 		}
+		$this->template->round = $round;
 		
-		if($session->round >= $this->populations/$this->picturesOnPage) {
+		if($session->round >= ($this->populations)/$this->picturesOnPage) {
 			$session->round = 0;
 			$this->redirect('Homepage:nextgeneration');
 		}
 
 		$imgArray = array();
 		for($i=0; $i<$this->picturesOnPage; $i++) {
+			
 			$imgArray[] = new Image($session->generation[$round * $this->picturesOnPage+$i]);			
 			$imgArray[$i]->saveToFile($i.".png");
 		}

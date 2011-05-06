@@ -29,11 +29,15 @@ $application->errorPresenter = 'Error';
 
 // Setup router
 {
-	$router = $application->getRouter();
+$router = $application->getRouter();
 
-	$router[] = new NRoute('index.php', 'Homepage:default', NRoute::ONE_WAY);
+//$router[] = new Route('index.php', 'Homepage:default', Route::ONE_WAY);
 
-	$router[] = new NRoute('<presenter>/<action>[/<id>]', 'Homepage:default');
+$router[] = new NRoute('<presenter>/<action>[/<id>]', array(
+    'presenter' => 'homepage',
+    'action' => 'default',
+    'id' => NULL,
+));
 };
 
 

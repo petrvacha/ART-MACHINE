@@ -1,27 +1,6 @@
 <?php
 
-/*
- * 
- *  imagearc ( resource $image , int $cx , int $cy , int $width , int $height , int $start , int $end , int $color )
- *  imagechar ( resource $image , int $font , int $x , int $y , string $c , int $color )
- *  imagecharup ( resource $image , int $font , int $x , int $y , string $c , int $color )
- *  imagecolorallocate ( resource $image , int $red , int $green , int $blue )
- *  imagedashedline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
- *  imageellipse ( resource $image , int $cx , int $cy , int $width , int $height , int $color )
- *  OKimagefill ( resource $image , int $x , int $y , int $color )
- *  imagefilledarc ( resource $image , int $cx , int $cy , int $width , int $height , int $start , int $end , int $color , int $style )
- * OK imagefilledellipse ( resource $image , int $cx , int $cy , int $width , int $height , int $color )
- *  imagefilledpolygon ( resource $image , array $points , int $num_points , int $color )
- * OK imagefilledrectangle ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
- *  imagefilltoborder ( resource $image , int $x , int $y , int $border , int $color )
- *  imagefilter ( resource $image , int $filtertype [, int $arg1 [, int $arg2 [, int $arg3 [, int $arg4 ]]]] )
- * OK imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
- *  imagesetpixel ( resource $image , int $x , int $y , int $color )
- *  imagesetstyle ( resource $image , array $style )
- *  imagesetthickness ( resource $image , int $thickness )
- *  imagefilltoborder ( resource $image , int $x , int $y , int $border , int $color ) 
- * 
- */
+
 class Image
 {
 	
