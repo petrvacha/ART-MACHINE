@@ -4,5 +4,6 @@ log/
 .buildpath
 .settings/
 
-www/new.png
-www/new2.png
+www/0.png
+www/1.png
+libs/jquery-1.5.2.min.js
