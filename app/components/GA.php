@@ -47,7 +47,37 @@ class GA
 		
 	}
 	
+	private function debugHelper(array $chromozome1, array $chromozome2){
+		echo '<pre>';
+		$text= array();
+		$chromoArray = array($chromozome1, $chromozome2);
+		foreach($chromoArray as $k => $a){
+			$text[$k] = '';
+			$text[$k].=$a['width'].' ';
+			$text[$k].=$a['height'].' ';
+			$text[$k].=$a['bgcolor']['r'].' ';
+			$text[$k].=$a['bgcolor']['g'].' ';
+			$text[$k].=$a['bgcolor']['b'].' ';
+			$text[$k].='<strong>*ELEMENTS*</strong> ';
+			foreach($a['elements'] as $c){
+				$text[$k].='<strong>START</strong> ';
+				$text[$k].=$c['element'].' ';
+				foreach($c['coordinates'] as $coordinate){
+					$text[$k].=$coordinate.' ';
+				}
+				$text[$k].=$c['color']['r'].' ';
+				$text[$k].=$c['color']['g'].' ';
+				$text[$k].=$c['color']['b'].' ';
+			}
+			$text[$k].='<strong>*FILTER*</strong> ';
+			$text[$k].=$a['filter'].' ';
+		}
+		
+		print_r($text[0].'</br>');
+		print_r($text[1].'</br>');
+	}
 	
+
 	private function generateCoordinates($function) {
 		$countPair = 1;
 		switch($function) {
@@ -79,11 +109,11 @@ class GA
 		return array('r' => mt_rand(0,255),'g' => mt_rand(0,255),'b' => mt_rand(0,255));
 	}
 	
+	
 
 	public function createNewPopulation($selected) {
 		$tmpGeneration = array();
 		//DUMP($selected);die;
-		echo '<pre>';
 		foreach($selected as $k => $s){
 			$tmpGeneration[] = $this->generation[2*$k+$s-1];
 			//var_dump($tmpGeneration[$k]);
@@ -91,48 +121,20 @@ class GA
 		
 		$i=0;
 		$c = count($tmpGeneration);
+
 		foreach($tmpGeneration as $k => $tg){
 			for($second=$k+1; $second<$c; $second++){
 				$separe = mt_rand(1,count($tmpGeneration[$k]["elements"]));
 				$side = mt_rand(0,1);
 				$this->newGeneration[$i] = $this->crossover($tmpGeneration[$k],$tmpGeneration[$second],$separe,$side);
 				$this->newGeneration[$i] = $this->mutation($this->newGeneration[$i]);
+				$this->debugHelper($tmpGeneration[$k], $this->newGeneration[$i]);die;
 				$i++;
 			}
 		}
 		
 		
 	}
-	
-	
-	/*private function crossover($chromozone1, $chromozone2){
-		if(mt_rand(1,100)<$this->crossoverPropability){
-			
-			$separe = mt_rand(1,count($chromozone1["elements"]));
-			$side = mt_rand(0,1);
-			
-			if($side){//CHANGE LEFT
-				if($separe <=5){//color
-					
-				}
-				else if($separe<count($chromozone1["elements"])-1){//color,elements
-					
-				}
-			}
-			else{
-				if($side){
-					if($separe <=5){//elements,filter
-						
-					}
-					else if($separe<count($chromozone1["elements"])-1){//elements,filter
-						
-					}
-				}
-			}
-		}
-	}
-	*/
-	
 	
 	
 	private function mutation($chromozone){
@@ -147,15 +149,16 @@ class GA
 					$element = mt_rand(1, COUNT_OF_FUNCTIONS);
 					$coordinates = $this->generateCoordinates($element);
 					$elementColors = $this->generateColor();
-					$chromozone["elements"] = $chromozone["elements"][$el]['element'] = $element;
-					$chromozone["elements"] = $chromozone["elements"][$el]['coordinates'] = $coordinates;
-					$chromozone["elements"] = $chromozone["elements"][$el]['color'] = $elementColors;
-				} 
+					$chromozone["elements"][$el]['element'] = $element;
+					$chromozone["elements"][$el]['coordinates'] = $coordinates;
+					$chromozone["elements"][$el]['color'] = $elementColors;
+				}
 			}
 			else{//FILTER
-				
+				$chromozone["filter"]= mt_rand(1,100);
 			}
-		}
+		}			
+		return $chromozone;
 	}
 	
 	
@@ -180,19 +183,13 @@ class GA
 				}			
 			}
 		}
+		else if($side)
+			return $chromozone1;
+		else
+			return $chromozone2;
+			
+		return $newChromozone;
 	}
-
-
-	
-	private function mutationFunction($function) {
-		
-	}
-	
-	private function crossoverFunction($function1, $function2) {
-		
-	}
-	
-	
 	
 	
 	public function setDimensions($width, $height) {
