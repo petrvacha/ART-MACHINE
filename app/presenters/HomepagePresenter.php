@@ -10,67 +10,60 @@
 class HomepagePresenter extends BasePresenter
 {
 
-	private $picturesOnPage = 2;
-	private $populations = 10;
-	
-	public function renderDefault($round, $selected)
-	{   
+	function renderDefault() {
 		
-		$session = NEnvironment::getSession("ga");
-		
-		if(isset($session->newgen) && $session->newgen && isset($session->gaObject)){
-			//dump("newGen");	
-			//dump($session->generation);die;
-			$ga = unserialize($session->gaObject);
-			$session->generation = $ga->newGeneration;
-			//unset($session->gaObject);
-			$session->selected = array();
-			$session->genRound++;
-			$session->newgen = False;
-		}
-		else if(!isset($session->generation) || !isset($round) || !isset($selected)) {
-		//	dump("first");
-			$session->round = 0;
-			$ga = new GA(500, 500);
-			$ga->setCountOfPopulations($this->populations);
-			$ga->generateInitGeneration();
-			$session->genRound = 0;
-			$session->gaObject = serialize($ga); 
-			$session->generation = $ga->generation;
-			$session->selected = array();
-		}
-		else {
-		//	dump("next");
-			$session->selected[$round-1] = $selected;
-			$session->round = (int) $round;
-		}
-		//die;
-		
-		if($session->round >= ($this->populations)/$this->picturesOnPage) {
-			$session->round = 0;
-			$session->newgen = True;
-			$this->redirect('Homepage:nextgeneration');
-		}
+	}
 
-		$imgArray = array();
-	//	dump($session->generation);//die;
-		for($i=0; $i<$this->picturesOnPage; $i++) {
-			$imgArray[] = new Image($session->generation[$round * $this->picturesOnPage+$i]);			
-			$imgArray[$i]->saveToFile($i.".png");
-		}
-		$this->template->round = $session->round+1;
-		$this->template->imgArray = $imgArray;
+	
+	protected function createComponentForm(){
+		$form = new NAppForm;
+		$form->addText('artist', 'Your name:')->setRequired('Please enter your name.');
+		
+		$form->addText('generationCount', 'Generation count:')
+			->setRequired('Please enter generation count.')
+			->addRule(NForm::RANGE, 'Generation count must be in range from %d to %d', array(2, 100))
+			->setDefaultValue("20");
+			
+		$form->addText('populationCount', 'Population count:')->setRequired('Please enter population count.')
+			->addRule($form::INTEGER)
+			->setDefaultValue("10")
+			->addRule(NForm::RANGE, 'Generation count must be in range from %d to %d', array(2, 100));
+          
+		$form->addText('crossover', 'Crossover propability:')
+			->setRequired('Please enter crossover propability.')
+			->addRule(NForm::RANGE, 'Crossover propability must be in range from %d to %d', array(0, 100))
+			->setDefaultValue("98");
+			
+		$form->addText('mutation', 'Mutation propability:')
+			->setRequired('Please enter mutation propability.')
+			->addRule(NForm::RANGE, 'Mutation propability must be in range from %d to %d', array(0, 100))
+			->setDefaultValue("70");
+		
+		$form->addText('filter', 'Filter propability:')
+			->setRequired('Please enter filter propability.')
+			->addRule(NForm::RANGE, 'Filter propability must be in range from %d to %d', array(0, 100))
+			->setDefaultValue("30");
+			
+		$form->addText('maxElements', 'Elements maximum:')
+			->setRequired('Please enter elements maximum.')
+			->addRule(NForm::RANGE, 'Elements maximum must be in range from %d to %d', array(10, 1000))
+			->setDefaultValue("50");
+			
+		$form->addText('width', 'Picture width:')
+			->setRequired('Please enter picture width.')
+			->addRule(NForm::RANGE, 'Picture width must be in range from %d to %d', array(1, 1000))
+			->setDefaultValue("400");
+			
+		$form->addText('height', 'Picture height:')
+			->setRequired('Please enter picture height.')
+			->addRule(NForm::RANGE, 'Picture height must be in range from %d to %d', array(1, 1000))
+			->setDefaultValue("400");
+		
+		
+		$form->addSubmit('start', 'Start');
+		$form->onSubmit[] = callback($this, 'formSubmitted');
+		return $form;
 	}
 	
-	public function actionNextgeneration(){
-		$session = NEnvironment::getSession("ga");
-		//DUMP($session->gaObject);die;
-		$ga = unserialize($session->gaObject);
-		//dump($ga);
-		$ga->createNewPopulation($session->selected);
-		$session->gaObject = serialize($ga);
-		$session->round = 0;
-		$this->redirect('Homepage:default');
-	}
 
 }

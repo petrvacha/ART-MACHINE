@@ -1,13 +1,8 @@
 {block content}
 
 <h1>art machine</h1>
-<a href="{plink default, 'selected' => 1, 'round' => $round}"><img style="float:left; margin-right:10px" src="0.png"></a>
-<a href="{plink default, 'selected' => 2, 'round' => $round}"><img src="1.png"></a>
+<h2>Set up</h2>
+{control form}
 
-<script>
-      $(document.body).ready(function () {
-        $("img:hidden:eq(0)").fadeIn(1200);
-        $("img:hidden:eq(1)").fadeIn(1200);
-      });
-</script>
+
 {/block}

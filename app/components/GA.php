@@ -4,13 +4,12 @@
 	
 class GA
 {
-	
 	private $functions = array(1);
 	private $width = 400;
 	private $height = 400;
-	private $crossoverPropability = 95; // %
-	private $mutationPropability = 0.1;  // %
-	private $filterPropability = 1;    // %
+	private $crossoverPropability = 99; // %
+	private $mutationPropability = 70;  // %
+	private $filterPropability = 60;    // %
 	private $countOfPopulations = 10;
 	private $maxElements = 50;
 	public $generation = array();
@@ -31,7 +30,7 @@ class GA
 			$this->generation[$i]['height'] = $this->height;
 			$this->generation[$i]['bgcolor'] = $bgcolors;
 			$this->generation[$i]['elements'] = array();
-			$this->generation[$i]['filter'] = mt_rand(6*$this->filterPropability, 600);	//TODO		
+			$this->generation[$i]['filter'] = mt_rand(0, (101 - $this->filterPropability)*6);	//TODO		
 			
 			for($y=0; $y<mt_rand(0,$this->maxElements); $y++) {
 				$element = mt_rand(1, COUNT_OF_FUNCTIONS);
@@ -113,82 +112,87 @@ class GA
 
 	public function createNewPopulation($selected) {
 		$tmpGeneration = array();
-		//DUMP($selected);die;
+		//DUMP($selected);
 		foreach($selected as $k => $s){
 			$tmpGeneration[] = $this->generation[2*$k+$s-1];
-			//var_dump($tmpGeneration[$k]);
 		}
-		
-		$i=0;
-		$c = count($tmpGeneration);
-
-		foreach($tmpGeneration as $k => $tg){
-			for($second=$k+1; $second<$c; $second++){
-				$separe = mt_rand(1,count($tmpGeneration[$k]["elements"]));
-				$side = mt_rand(0,1);
-				$this->newGeneration[$i] = $this->crossover($tmpGeneration[$k],$tmpGeneration[$second],$separe,$side);
-				$this->newGeneration[$i] = $this->mutation($this->newGeneration[$i]);
-				$this->debugHelper($tmpGeneration[$k], $this->newGeneration[$i]);die;
-				$i++;
-			}
+		unset($this->generation);
+		$finalCount=count($tmpGeneration);
+		for($i=0; $i<2*$finalCount; $i++){
+			$this->generation[$i] = $this->crossover($tmpGeneration[mt_rand(0,$finalCount-1)],$tmpGeneration[mt_rand(0,$finalCount-1)]);
+			$this->generation[$i] = $this->mutation($this->generation[$i]);
 		}
-		
-		
+		//$this->debugHelper($tmpGeneration[0], $this->newGeneration[0]);
+		//$this->debugHelper($tmpGeneration[0], $this->newGeneration[1]);die;
 	}
 	
 	
-	private function mutation($chromozone){
-		if(mt_rand(1,100)<$this->mutationPropability){
-			$rnd = mt_rand(0,1+count($chromozone["elements"])+1); 
-			if($rnd <1){
-				$chromozone["bgcolor"] = $this->generateColor();
-			}
-			else if($rnd<1+count($chromozone["elements"])){
-				if(count($chromozone["elements"])){
-					$el = mt_rand(0,count($chromozone["elements"]));
-					$element = mt_rand(1, COUNT_OF_FUNCTIONS);
-					$coordinates = $this->generateCoordinates($element);
-					$elementColors = $this->generateColor();
-					$chromozone["elements"][$el]['element'] = $element;
-					$chromozone["elements"][$el]['coordinates'] = $coordinates;
-					$chromozone["elements"][$el]['color'] = $elementColors;
-				}
-			}
-			else{//FILTER
-				$chromozone["filter"]= mt_rand(1,100);
-			}
-		}			
-		return $chromozone;
-	}
-	
-	
-	private function crossover($chromozone1, $chromozone2, $separe, $side){
-		$newChromozone;
+	private function crossover($chromozome1, $chromozome2){
+		$newChromozone = $chromozome1;
+		$separe = mt_rand(0,count($chromozome2["elements"])+3);
+		$side = mt_rand(0,1);
 		if(mt_rand(1,100)<$this->crossoverPropability){
-			$separe = $separe - 5;
+			
 			if($side){
-				$newChromozone = $chromozone1;
-				for($i=$separe; $i<count($chromozone1); $i++){
-					if(isset($chromozone2[$i]))
-						$newChromozone["elements"][$i] = $chromozone2[$i];
+				//dump("měním 2. půlku".$separe);
+				for($i=$separe; $i<count($chromozome1["elements"])+4; $i++){
+					
+					if($i<3)
+						$newChromozone["bgcolor"] = $chromozome2["bgcolor"];					
+					
+					if(isset($chromozome2["elements"][$i-3]))
+						$newChromozone["elements"][$i-3] = $chromozome2["elements"][$i-3];
+
+					if($i == count($chromozome1["elements"])+3)
+						$newChromozone["filter"] = $chromozome2["filter"];
 				}
-				$newChromozone["filter"] = $chromozone2["filter"];
 			}
 			else{
-				$newChromozone = $chromozone1;
-				$newChromozone["bgcolor"] = $chromozone2["bgcolor"];
+				//dump("měním 1. půlku".$separe);
 				for($i=0; $i<$separe; $i++){
-					if(isset($chromozone2[$i]))
-						$newChromozone["elements"][$i] = $chromozone2[$i];
-				}			
+					
+					if($i<3)
+						$newChromozone["bgcolor"] = $chromozome2["bgcolor"];					
+					
+					if(isset($chromozome2["elements"][$i-3]))
+						$newChromozone["elements"][$i-3] = $chromozome2["elements"][$i-3];
+
+					if($i == count($chromozome1["elements"])+3)
+						$newChromozone["filter"] = $chromozome2["filter"];
+				}
 			}
 		}
 		else if($side)
-			return $chromozone1;
+			return $chromozome1;
 		else
-			return $chromozone2;
+			return $chromozome2;
 			
 		return $newChromozone;
+	}
+	
+	
+	private function mutation($chromozome){
+		if(mt_rand(1,100)<$this->mutationPropability){
+			$rnd = mt_rand(0,count($chromozome["elements"])+4);
+			if($rnd <3){
+				$chromozome["bgcolor"] = $this->generateColor();
+			}
+			else if($rnd<count($chromozome["elements"])+3){
+				if(count($chromozome["elements"])){
+					$el = mt_rand(0,count($chromozome["elements"]));
+					$element = mt_rand(1, COUNT_OF_FUNCTIONS);
+					$coordinates = $this->generateCoordinates($element);
+					$elementColors = $this->generateColor();
+					$chromozome["elements"][$el]['element'] = $element;
+					$chromozome["elements"][$el]['coordinates'] = $coordinates;
+					$chromozome["elements"][$el]['color'] = $elementColors;
+				}
+			}
+			else{//FILTER
+				$chromozome["filter"]= mt_rand(0, (101 - $this->filterPropability)*6);
+			}
+		}			
+		return $chromozome;
 	}
 	
 	
