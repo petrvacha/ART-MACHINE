@@ -16,7 +16,6 @@ require LIBS_DIR . '/Nette/loader.php';
 NDebug::$strictMode = TRUE;
 NDebug::enable();
 
-
 // Load configuration from config.neon file
 NEnvironment::loadConfig();
 
@@ -24,6 +23,7 @@ NEnvironment::loadConfig();
 // Configure application
 $application = NEnvironment::getApplication();
 $application->errorPresenter = 'Error';
+$application->catchExceptions = FALSE;
 //$application->catchExceptions = TRUE;
 
 
@@ -34,7 +34,7 @@ $router = $application->getRouter();
 //$router[] = new Route('index.php', 'Homepage:default', Route::ONE_WAY);
 
 $router[] = new NRoute('<presenter>/<action>[/<id>]', array(
-    'presenter' => 'homepage',
+    'presenter' => 'Homepage',
     'action' => 'default',
     'id' => NULL,
 ));
