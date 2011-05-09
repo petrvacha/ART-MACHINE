@@ -21,7 +21,7 @@ class GA
 	}
 	
 	public function generateInitGeneration() {
-			
+		
 		for($i=0; $i<$this->countOfPopulations; $i++) {
 			$bgcolors = $this->generateColor();
 

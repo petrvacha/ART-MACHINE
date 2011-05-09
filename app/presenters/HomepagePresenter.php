@@ -82,7 +82,6 @@ class HomepagePresenter extends BasePresenter
 	}
 	
 	private $picturesOnPage = 2;
-	private $populations = 10;
 	
 	public function renderEvolution($round, $selected)
 	{   
@@ -118,7 +117,7 @@ class HomepagePresenter extends BasePresenter
 			$session->round = (int) $round;
 		}
 		
-		if($session->round >= ($this->populations)/$this->picturesOnPage) {
+		if($session->round >= ($session->populationCount)/$this->picturesOnPage) {
 			$session->round = 0;
 			$session->newgen = True;
 			$this->redirect('Homepage:nextgeneration');
