@@ -11,7 +11,7 @@ class GA
 	private $mutationPropability = 70;  // %
 	private $filterPropability = 60;    // %
 	private $countOfPopulations = 10;
-	private $maxElements = 50;
+	private $maxElements = 1000;
 	public $generation = array();
 	public $newGeneration = array();
 
